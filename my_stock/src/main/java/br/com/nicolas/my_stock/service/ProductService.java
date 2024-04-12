@@ -1,13 +1,15 @@
 package br.com.nicolas.my_stock.service;
 
-import br.com.nicolas.my_stock.dto.ProductDTO;
+import br.com.nicolas.my_stock.dto.ProductDto;
+import br.com.nicolas.my_stock.dto.ProductUpdateDto;
 import br.com.nicolas.my_stock.model.Product;
 import br.com.nicolas.my_stock.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -15,29 +17,40 @@ public class ProductService {
     @Autowired
     ProductRepository repository;
 
-    public List<ProductDTO> getAvailableProducts() {
-        List<Product> products = repository.findAll();
-        return productToDTO(products);
+
+    public void createProduct(ProductDto data) {
+        repository.save(new Product(data));
     }
 
-    public ProductDTO getProductById(Long id) {
-        Optional<Product> product = repository.findById(id);
-        if (product.isPresent()) {
-            Product p = product.get();
-            return new ProductDTO(p.getId(), p.getName(), p.getDescription(), p.getQuantity(), p.getPrice());
-        }
-        return null;
+    public Page<ProductDto> getProducts(Pageable pageable) {
+        return repository.findAll(pageable).map(ProductDto::new);
     }
 
-    public List<ProductDTO> getProductsByName(String name) {
-        List<Product> products = repository.findByNameContainingIgnoreCase(name);
-        return productToDTO(products);
+    public void updateProduct(Long id, ProductUpdateDto data) {
+        Product product = repository.getReferenceById(id);
+        product.update(data);
+
     }
 
-    private List<ProductDTO> productToDTO(List<Product> products) {
+    public void deactivateProduct(Long id) {
+        Product product = repository.getReferenceById(id);
+        product.setActive(false);
+    }
+
+    private List<ProductDto> productToDTO(List<Product> products) {
         return products
                 .stream()
-                .map(p -> new ProductDTO(p.getId(), p.getName(), p.getDescription(), p.getQuantity(), p.getPrice()))
+                .map(p -> new ProductDto(
+                        p.getId(),
+                        p.getName(),
+                        p.getDescription(),
+                        p.getQuantity(),
+                        p.getPrice(),
+                        p.getActive())
+                )
                 .collect(Collectors.toList());
     }
+
+
+
 }

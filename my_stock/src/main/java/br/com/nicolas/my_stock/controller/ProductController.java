@@ -1,11 +1,14 @@
 package br.com.nicolas.my_stock.controller;
 
-import br.com.nicolas.my_stock.dto.ProductDTO;
+import br.com.nicolas.my_stock.dto.ProductDto;
+import br.com.nicolas.my_stock.dto.ProductUpdateDto;
 import br.com.nicolas.my_stock.service.ProductService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -13,24 +16,28 @@ public class ProductController {
     @Autowired
     ProductService service;
 
-    @GetMapping("/available")
-    public List<ProductDTO> getAvailableProducts(){
-        return service.getAvailableProducts();
-    }
-
-    @GetMapping("/{id}")
-    public ProductDTO getProductById(@PathVariable Long id) {
-        return service.getProductById(id);
+    @PostMapping
+    @Transactional
+    public void createProduct(@RequestBody ProductDto data) {
+        service.createProduct(data);
     }
 
     @GetMapping
-    public List<ProductDTO> getProductsByName(@RequestParam(required = false) String name){
-        return service.getProductsByName(name);
+    public Page<ProductDto> getProducts(@PageableDefault(sort = {"name"}) Pageable pageable) {
+        return service.getProducts(pageable);
     }
-//    @GetMapping("/{name}")
-//    public List<ProductDTO> getProductsByName(@PathVariable String name) {
-//        return service.getProductsByName(name);
-//    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public void updateProduct(@PathVariable Long id, @RequestBody ProductUpdateDto data) {
+        service.updateProduct(id, data);
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public void deactivateProduct(@PathVariable Long id) {
+        service.deactivateProduct(id);
+    }
 
     @GetMapping("/teste")
     public String teste() {

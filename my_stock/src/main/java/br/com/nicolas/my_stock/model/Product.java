@@ -1,9 +1,17 @@
 package br.com.nicolas.my_stock.model;
 
+import br.com.nicolas.my_stock.dto.ProductDto;
+import br.com.nicolas.my_stock.dto.ProductUpdateDto;
 import jakarta.persistence.*;
+import lombok.*;
 
-@Entity
-@Table(name = "product")
+@Entity(name = "Product")
+@Table(name = "products")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Product {
 
     @Id
@@ -13,24 +21,31 @@ public class Product {
     private String description;
     private Integer quantity;
     private Double price;
+    private Boolean active;
 
-    public Long getId() {
-        return id;
+    public Product(ProductDto p) {
+        this.name = p.name();
+        this.description = p.description();
+        this.quantity = p.quantity();
+        this.price = p.price();
+        this.active = true;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public Double getPrice() {
-        return price;
+    public void update(ProductUpdateDto data) {
+        if (data.name() != null) {
+            this.name = data.name();
+        }
+        if (data.description() != null) {
+            this.description = data.description();
+        }
+        if (data.quantity() != null) {
+            this.quantity = data.quantity();
+        }
+        if (data.price() != null) {
+            this.price = data.price();
+        }
+        if (data.active() != null) {
+            this.active = data.active();
+        }
     }
 }
