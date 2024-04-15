@@ -1,0 +1,32 @@
+## TODO 11/04/24
+- ~~adicionar dependências: LOMBOK, Flyway~~
+- ~~migration 1: criar tabela produtos com campos [id, name, description, price, quantity, active]~~
+- ~~adicionar campo Bool active na entidade produto e DTOs~~
+- ~~create produtos~~
+- ~~read produtos~~
+- ~~update produtos~~
+- ~~delete produtos~~
+
+## TODO 15/04/24
+- entity customer
+  - [x] id
+  - [x] name
+  - [x] email
+  - [ ] loyalty points (extra)*
+  - [x] order history (list of orders)
+- entity order
+  - [x] id
+  - [x] Customer id
+  - [x] order date
+  - [x] order status (enum: pending, shipped, delivered)
+  - [x] order total
+  - [x] installments
+  - [x] payment status
+  - [x] payment method (enum: pix, cash, card)
+  - [x] shipping address
+  - [x] list of products
+  - [x] shipping method (enum: standart, express)
+- [ ] create customer
+- [ ] read customers
+- [ ] update customer
+- [ ] delete customer

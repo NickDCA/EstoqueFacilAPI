@@ -27,10 +27,11 @@ public class ProductController {
         return service.getProducts(pageable);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = {"application/json"})
     @Transactional
-    public void updateProduct(@PathVariable Long id, @RequestBody ProductUpdateDto data) {
+    public String updateProduct(@PathVariable Long id, @RequestBody ProductUpdateDto data) {
         service.updateProduct(id, data);
+        return "Deu certo";
     }
 
     @DeleteMapping("/{id}")

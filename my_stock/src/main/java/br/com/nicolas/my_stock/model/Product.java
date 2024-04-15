@@ -3,15 +3,13 @@ package br.com.nicolas.my_stock.model;
 import br.com.nicolas.my_stock.dto.ProductDto;
 import br.com.nicolas.my_stock.dto.ProductUpdateDto;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+
+import java.util.List;
 
 @Entity(name = "Product")
 @Table(name = "products")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@Data
 public class Product {
 
     @Id
@@ -22,6 +20,8 @@ public class Product {
     private Integer quantity;
     private Double price;
     private Boolean active;
+    @ManyToMany(mappedBy = "products")
+    private List<Order> orders;
 
     public Product(ProductDto p) {
         this.name = p.name();
